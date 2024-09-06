@@ -125,6 +125,11 @@
         <button id="italicBtn"><i>I</i></button>
         <button id="underlineBtn"><u>U</u></button>
       </div>
+
+      <label for="bgUpload">Imagem de Fundo</label>
+      <input type="file" id="bgUpload" accept="image/*">
+
+      <button id="generateJSON">Gerar JSON</button>
     </div>
   </div>
 
@@ -182,8 +187,52 @@
     document.getElementById('underlineBtn').addEventListener('click', function() {
       textElement.classList.toggle('underline');
     });
+
+    // Upload da imagem de fundo
+    document.getElementById('bgUpload').addEventListener('change', function(e) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        document.getElementById('backgroundImage').src = event.target.result;
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    });
+
+    // Gerar JSON com a estrutura do template
+    document.getElementById('generateJSON').addEventListener('click', function() {
+      const bgImage = document.getElementById('backgroundImage').src;
+      const textContent = document.getElementById('textElement').textContent;
+      const textColor = document.getElementById('textElement').style.color;
+      const textFontSize = document.getElementById('textElement').style.fontSize || '24px';
+      const textFontFamily = document.getElementById('textElement').style.fontFamily || 'Arial';
+      const textPosition = {
+        top: document.getElementById('textElement').style.top || '0px',
+        left: document.getElementById('textElement').style.left || '0px'
+      };
+      const profileImgSrc = document.getElementById('profileImage').src;
+      const profilePosition = {
+        top: document.getElementById('profileImage').style.top || '0px',
+        left: document.getElementById('profileImage').style.left || '0px'
+      };
+
+      const template = {
+        backgroundImage: bgImage,
+        text: {
+          content: "{{dynamic_text}}", // Placeholder para texto dinâmico
+          fontSize: textFontSize,
+          fontFamily: textFontFamily,
+          color: textColor,
+          position: textPosition
+        },
+        profileImage: {
+          src: "{{dynamic_profile_image}}", // Placeholder para imagem de perfil dinâmica
+          position: profilePosition
+        }
+      };
+
+      console.log(JSON.stringify(template, null, 2));
+      alert('Template salvo! Veja o console para detalhes.');
+    });
   </script>
 
 </body>
 </html>
-
